@@ -1,0 +1,26 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+cmake-build-*/
+
+# Environments
+.venv/
+venv/
+env/
+bin/
+lib/
+
+# Project Data & Weights
+data/
+*.npy
+*.zip
+*.log
+
+# OS specific
+.DS_Store
+Thumbs.db
