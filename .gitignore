@@ -24,3 +24,5 @@ data/
 # OS specific
 .DS_Store
 Thumbs.db
+/Improvements.md
+/word_vectors.npy
