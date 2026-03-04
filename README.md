@@ -60,9 +60,9 @@ Implement the core training loop of Word2Vec **without using PyTorch/TensorFlow*
 ```
 DIY-Word2Vec/
 ├── main.py                 # Entry point, full training pipeline
-├── MATHEMATICS.md          # Detailed math derivations (for defense!)
-├── DEFENSE.md             # Q&A guide for interview/presentation
 ├── README.md              # This file
+├── check_weights.py          # Sanity checks for gradients and weight updates
+├── test_word2vec.py           # Unit tests for all components
 ├── src/
 │   ├── word2vec.py        # Core Word2Vec model (fully documented)
 │   ├── vocab.py           # Vocabulary management + subsampling
