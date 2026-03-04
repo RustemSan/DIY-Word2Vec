@@ -289,11 +289,4 @@ After completing this project, you will understand:
 - ✅ Practical techniques (regularization, scheduling, sampling)
 - ✅ Debugging ML code (loss curves, gradient checks)
 
-## 📝 License
-
-MIT License - Educational purposes
-
----
-
-**Author's Note**: This implementation prioritizes **clarity + correctness + speed**. Every line is here for a reason. Read the comments, understand the math, and you'll master word embeddings! 🚀
 
