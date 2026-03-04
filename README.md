@@ -67,6 +67,9 @@ DIY-Word2Vec/
 │   ├── word2vec.py        # Core Word2Vec model (fully documented)
 │   ├── vocab.py           # Vocabulary management + subsampling
 │   └── dataset.py         # Batch generation with negative sampling
+|   └── optimizers.py       # AdaGrad and Adam implementations
+|   └── fasttext.py         # FastText with character n-grams
+|   └── utils.py            # Utility functions (similarity, evaluation)
 └── data/
     └── text8              # Training dataset (17M tokens)
 ```
@@ -125,7 +128,6 @@ $$\frac{\partial L}{\partial C} = (\hat{y} - y) \cdot W + \lambda \cdot C$$
 
 The error term $(\hat{y} - y)$ is beautifully simple!
 
-**→ See [MATHEMATICS.md](MATHEMATICS.md) for full derivations**
 
 ## 🚀 Quick Start
 
@@ -160,47 +162,54 @@ Word2Vec Implementation in Pure NumPy
 ============================================================
 
 [1] Loading text data...
-Total tokens: 17,005,207
-Sample tokens: ['anarchism', 'originated', 'as', 'a', 'movement', ...]
+Total tokens: 1000000
+Sample tokens: ['anarchism', 'originated', 'as', 'a', 'term', 'of', 'abuse', 'first', 'used', 'against']
 
 [2] Building vocabulary...
-Vocabulary built successfully. Total unique words: 71,290
+Vocabulary built successfully. Total unique words: 28013
 
 [3] Converting tokens to IDs...
-Tokens after vocabulary filtering: 16,718,843
+Tokens after vocabulary filtering: 975259
 
 [4] Subsampling frequent words...
-Original: 16718843, After subsampling: 14892384
+Original: 975259, After subsampling: 725043
 
 [5] Creating Word2Vec dataset...
 
 [6] Initializing Word2Vec model...
+✅ AdaGrad initialized with ε=1e-08
 Model parameters:
-  - Vocabulary size: 71,290
+  - Vocabulary size: 28013
   - Embedding dimension: 100
-  - Total parameters: 14,258,000
+  - Total parameters: 5,602,600
 
 [7] Starting training...
 
-Epoch 1/5
-  Learning rate: 0.025000
-  Epoch loss (BCE + L2): 0.6234
-  
-Epoch 2/5
-  Learning rate: 0.018750
-  Epoch loss (BCE + L2): 0.4123
-  
+Epoch 1/5: 100%|██████████| 5664/5664 [01:16<00:00, 74.68batch/s]
+Epoch 2/5: 100%|██████████| 5664/5664 [01:15<00:00, 75.12batch/s]
 ...
+Epoch 5/5: 100%|██████████| 5664/5664 [01:15<00:00, 75.04batch/s]
 
 [8] Evaluating embeddings...
+
 Most similar words for 'neural':
-  - network: 0.7543
-  - algorithm: 0.6234
-  - learning: 0.5821
-  - intelligence: 0.5432
+Query word: 'neural'
+  - semantic: 0.9680
+  - synthesized: 0.9670
+  - harmonic: 0.9669
+  - silica: 0.9668
+  - chat: 0.9666
 
 [9] Training complete!
-Final embedding matrix shape: (71290, 100)
+Final embedding matrix shape: (28013, 100)
+
+[10] Solving analogies (e.g., king - man + woman)...
+  - king - man + woman = daughter (0.8886)
+  - paris - france + italy = shortly (0.9358)
+  - doctor - man + woman = antiochus (0.9248)
+
+[11] Exporting weights...
+✅ Success: Weights saved to /kaggle/working/word_vectors.npy
 ```
 
 ## 📚 Key Concepts
@@ -228,24 +237,15 @@ scores = np.sum(v_targets * v_contexts, axis=1)  # (B,)
 
 ### Expected Questions:
 
-1. **Explain the architecture**: ✅ See [DEFENSE.md](DEFENSE.md) Q1
-2. **Derive the gradients**: ✅ See [MATHEMATICS.md](MATHEMATICS.md)
 3. **Why skip-gram over CBOW?**: Faster, more accurate for large datasets
 4. **Why sigmoid + negative sampling?**: Computational efficiency (O(k) vs O(V log V))
 5. **Why two weight matrices?**: Better gradient flow, faster convergence
 6. **How do you optimize for speed?**: Vectorization, pre-computed sampling table, efficient batching
 
-**→ Full Q&A in [DEFENSE.md](DEFENSE.md)**
 
 ## 📊 Results
 
-After 5 epochs on text8:
-- **Loss**: 0.71 → 0.18 ✅
-- **Most similar words for "king"**:
-  - queen: 0.87
-  - monarch: 0.73
-  - prince: 0.71
-  - emperor: 0.68
+
 
 ## 🔬 Code Quality Features
 
